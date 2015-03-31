@@ -20,20 +20,61 @@ var Back2Top = React.createClass({
             direction: "right",
             windowHeight: window.innerHeight,
             count : 0,
+            scrollTimer: null,
             loop : {}
         }
     },
 
-    handleResize: function(e) {
-        this.setState({windowHeight: window.innerHeight});
-    },
-    componentDidMount: function() {
-        window.addEventListener('resize', this.handleResize);
-    },
-    componentWillUnmount: function() {
-        window.removeEventListener('resize', this.handleResize);
+    getInitialState: function () {
+        return {
+            visible : false
+        }
     },
 
+    componentDidMount: function() {
+        window.addEventListener('scroll', this.handleScroll);
+    },
+
+    componentWillUnmount: function() {
+        window.removeEventListener('scroll', this.handleScroll);
+    },
+
+    /**
+     * @private
+     * @method clearTimer
+     */
+    clearTimer: function() {
+        if(this.props.scrollTimer) {
+            window.clearTimeout(this.props.scrollTimer);
+            this.props.scrollTimer = null;
+        }
+    },
+
+    show : function () {
+        this.setState({
+            visible : true
+        })
+    },
+
+    hide : function () {
+        this.setState({
+            visible : false
+        })
+    },
+
+    /**
+     * @private
+     * @method checkIfVisible
+     */
+    checkIfVisible: function() {
+        window.pageYOffset > document.documentElement.clientHeight ? this.show() : this.hide()
+    },
+
+    handleScroll : function (e) {
+        this.clearTimer();
+        this.isFast && this.hide();
+        this.props.scrollTimer = window.setTimeout(o.util.bind(this.checkIfVisible, this), 300);
+    },
 
     /**
      * @private
@@ -80,7 +121,8 @@ var Back2Top = React.createClass({
         var componentStyle = {
             'position' : 'fixed',
             'bottom' : '10px',
-            'cursor' : 'pointer'
+            'cursor' : 'pointer',
+            'display' : this.state.visible? 'block': 'none'
         };
         this.props.direction === 'left' ? componentStyle['left']=0 : componentStyle['right']=0;
         return (
