@@ -6,7 +6,7 @@
 var React = require('react');
 var o = require('g-octopus');
 
-var Back2Top = React.createClass({
+var Back2top = React.createClass({
 
     /**
      * @desc 缺省参数
@@ -183,7 +183,7 @@ var Back2Top = React.createClass({
 
     /**
      * @public
-     * @method octopus.Widget.Back2Top.goTo
+     * @method octopus.Widget.Back2top.goTo
      * @param y {Number}
      * @param animation {Boolean}
      * @desc 使页面滚到指定位置
@@ -238,4 +238,4 @@ var Back2Top = React.createClass({
     }
 });
 
-module.exports = Back2Top;
+module.exports = Back2top;
