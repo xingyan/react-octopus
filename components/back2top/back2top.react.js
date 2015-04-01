@@ -117,15 +117,6 @@ var Back2top = React.createClass({
      * @property initConfig
      */
     componentDidMount: function() {
-        if(this.props.data){
-            this.props.id = this.props.data.id || 'toTop';
-            this.props.width = this.props.data.width || '50px';
-            this.props.height = this.props.data.height || '50px';
-            this.props.bottom = this.props.data.bottom || '10px';
-            this.props.offsetV = this.props.data.offsetV || '10px';
-            this.props.direction = this.props.data.direction || 'right';
-            this.props.background = this.props.data.background || 'rgba(0, 0, 0, .8)';
-        }
         //o.dom.addClass(this.el, "octopusui-back2top");
         this.props.loop = {};
         this.initFixed();

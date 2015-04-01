@@ -20,7 +20,7 @@
     el.appendChild(div);
 
     React.render(
-        <Back2top data={options}/>,
+        <Back2top id={options.id} bottom={options.bottom} offsetV={options.offsetV}/>,
         div
     );
 
