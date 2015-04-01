@@ -14,22 +14,90 @@ var Back2top = React.createClass({
      */
     getDefaultProps: function() {
         return {
+            /*
+             *  @desc 是否有动画
+             *  @type {Boolean}
+             * */
             animation : true,
+            /*
+             *  @desc 滚动中是否隐藏
+             *  @type {Boolean}
+             * */
             isFast : false,
+            /*
+             *  @desc 动画计数
+             *  @type {Number}
+             * */
             count : 0,
+            /*
+             *  @desc 用来优化性能的scroll时的定时器
+             *  @type {Number}
+             * */
             scrollTimer: null,
+            /*
+             *  @desc 动画的内存寻址
+             *  @type {Object}
+             * */
             loop : null,
+            /*
+             *  @desc 某些机器不支持fixed属性 用absolute代替
+             *  @type {Boolean}
+             * */
             isAbsolute : false,
+            /*
+             *  @desc 当前是否在scroll的标志位
+             *  @type {Boolean}
+             * */
             isScroll: false,
+            /*
+             *  @desc 是否用户自定义点击事件
+             *  @type {Boolean}
+             * */
             customize: false,
+            /*
+             *  @desc 是否测试过是否支持fixed属性
+             *  @type {Boolean}
+             * */
             testFixed: false,
-            testFixableDom: null,
+            /*
+             *  @desc 用来判断设备是否支持fixed的节点
+             *  @type {DOMElement}
+             * */
+//                testFixableDom: null,
+            /*
+             *  @desc 节点ID
+             *  @type {String}
+             * */
             id : 'toTop',
+            /*
+             *  @desc 样式宽度
+             *  @type {String}
+             * */
             width : '50px',
+            /*
+             *  @desc 样式高度
+             *  @type {String}
+             * */
             height : '50px',
+            /*
+             *  @desc 样式底部距离
+             *  @type {String}
+             * */
             bottom : '10px',
+            /*
+             *  @desc 样式侧面距离
+             *  @type {String}
+             * */
             offsetV : '10px',
+            /*
+             *  @desc 控件在左侧还是右侧 默认右侧 "right" || "left"
+             *  @type {String}
+             * */
             direction : 'right',
+            /*
+             *  @desc 样式背景参数，支持设置图片背景样式，例如 'url("../img/skin_dark_dc373b68.png") no-repeat -688px -406px'
+             *  @type {String}
+             * */
             background : 'rgba(0, 0, 0, .8)'
         }
     },
@@ -95,6 +163,19 @@ var Back2top = React.createClass({
 
     /**
      * @private
+     * @method testFixable
+     * @desc 判断当前设备是否支持fixed属性
+     */
+    testFixable: function() {
+        var element = document.createElement('div');
+        if('position' in element.style){
+            element.style['position'] = 'fixed';
+            if(element.style['position'] !== 'fixed')this.setAbsolute();
+        }
+    },
+
+    /**
+     * @private
      * @method onOrientationChanged
      */
     onOrientationChanged: function() {
@@ -107,7 +188,7 @@ var Back2top = React.createClass({
      * @desc 当设备不支持fixed时用absolute的滚动
      */
     startFixed: function() {
-        if(!this.active)    return;
+//            if(!this.active)    return;
         var direction = this.direction == "right" ? "left" : "right";
         o.dom.setStyles(this.el, {
             top: window.pageYOffset + window.innerHeight - parseInt(this.getHeight()) - this.bottom + "px"
@@ -156,12 +237,22 @@ var Back2top = React.createClass({
 
     /**
      * @private
+     * @method onScrollStop
+     */
+    onScrollStop: function() {
+        this.props.isAbsolute && this.startFixed();
+        !this.props.testFixed && this.testFixable();
+        this.checkIfVisible();
+    },
+
+    /**
+     * @private
      * @desc 滚动事件处理函数
      */
     handleScroll : function (e) {
         this.clearTimer();
         this.isFast && this.hide();
-        this.props.scrollTimer = window.setTimeout(o.util.bind(this.checkIfVisible, this), 300);
+        this.props.scrollTimer = window.setTimeout(o.util.bind(this.onScrollStop, this), 300);
     },
 
     /**
@@ -219,7 +310,7 @@ var Back2top = React.createClass({
     render : function () {
         var componentStyle = {
             'position' : 'fixed',
-            'z-index' : '999',
+            'zIndex' : '999',
             'cursor' : 'pointer',
             'display' : this.state.visible? 'block': 'none',
             'width' : this.props.width,
@@ -237,5 +328,6 @@ var Back2top = React.createClass({
         );
     }
 });
+
 
 module.exports = Back2top;
