@@ -113,7 +113,7 @@ var Back2top = React.createClass({
     },
 
     /**
-     * @desc 设置参数
+     * @desc 绑定事件
      * @property initConfig
      */
     componentDidMount: function() {
